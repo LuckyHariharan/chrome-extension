@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "React Boilerplate",
+    "default_title": "Actuarial Present Value",
     "default_icon": "icon.png"
   },
   "chrome_url_overrides": {
