@@ -19,7 +19,7 @@ const Popup = () => {
   };
 
   return (
-    <div className="w-80 p-4 bg-gray-100">
+    <div className="w-full p-4 bg-gray-100">
       <h1 className="text-4xl text-green-500 mb-4">Actuarial Calculator</h1>
       {/* First Box: Gender and Smoking */}
       <div className="mb-4">
