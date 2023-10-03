@@ -56,11 +56,7 @@ const Popup = () => {
 
   return (
     <div className="w-full p-4 bg-gray-100">
-      <h1
-        className={`text-4xl text-green-500 mb-4 ${
-          stage === Stages.Input ? "flex justify-center" : ""
-        }`}
-      >
+      <h1 className={"text-4xl text-green-500 mb-4 flex justify-center "}>
         {stage === Stages.Input ? "Actuarial Calculator" : "Result"}
       </h1>
       {stage === Stages.Input ? (
