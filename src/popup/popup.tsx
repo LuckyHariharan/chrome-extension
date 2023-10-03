@@ -96,7 +96,7 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={periods}
-              onChange={(e) => setPeriods(e.target.value)}
+              onBlur={(e) => setPeriods(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -107,7 +107,7 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={interestRate}
-              onChange={(e) =>
+              onBlur={(e) =>
                 setInterestRate(formatInterestRateInput(e.target.value))
               }
             />
@@ -120,7 +120,7 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={paymentAmount}
-              onChange={(e) =>
+              onBlur={(e) =>
                 setPaymentAmount(formatPaymentAmountInput(e.target.value))
               }
             />
@@ -152,34 +152,4 @@ const Popup = () => {
             </select>
           </div>
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
-            onClick={handleCalculate}
-          >
-            Calculate
-          </button>
-        </div>
-      ) : (
-        // Stage 2: Result
-        <div className="text-center h-full">
-          <h2 className="text-3xl text-green-500 mb-4">
-            Actuarial Present Value
-          </h2>
-          <p className="text-xl mb-4">
-            The Actuarial Present Value of that series of payments is:{" "}
-            <span className="text-green-500 font-bold text-3xl">
-              ${result || 0}
-            </span>
-          </p>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover-bg-blue-600"
-            onClick={handleBackToStage1}
-          >
-            Back to Input
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Popup;
+            className="bg-green-500 text-white px-4 py-2
