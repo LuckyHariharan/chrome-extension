@@ -53,8 +53,28 @@ const Popup = () => {
   };
 
   // Function to format the payment amount input
+  // Function to format the payment amount input
   const formatPaymentAmountInput = (value) => {
-    if (value[0] !== "$") return "$" + value;
+    // Remove any existing dollar signs from the value
+    value = value.replace(/\$/g, "");
+
+    // Add a dollar sign at the beginning if it's not already there
+    if (value[0] !== "$") {
+      value = "$" + value;
+    }
+
+    // Split the value into dollars and cents (if present)
+    const [dollars, cents] = value.split(".");
+
+    // Add commas for thousands in the dollars part
+    const formattedDollars = dollars.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Reconstruct the formatted value with dollars and cents
+    if (cents !== undefined) {
+      return formattedDollars + "." + cents;
+    } else {
+      return formattedDollars;
+    }
   };
 
   // Function to parse the payment amount input
