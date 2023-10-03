@@ -36,22 +36,22 @@ const Popup = () => {
 
   // Function to format the interest rate input
   const formatInterestRateInput = (value) => {
-    return value + "%";
+    if (value[0] !== "%") return "%" + value;
   };
 
   // Function to parse the interest rate input
   const parseInterestRateInput = (value) => {
-    return value.replace("%", "");
+    if (value[0] !== "%") return "%" + value;
   };
 
   // Function to format the payment amount input
   const formatPaymentAmountInput = (value) => {
-    return "$" + value;
+    if (value[0] !== "$") return "$" + value;
   };
 
   // Function to parse the payment amount input
   const parsePaymentAmountInput = (value) => {
-    return value.replace("$", "");
+    if (value[0] !== "$") return "$" + value;
   };
 
   return (
