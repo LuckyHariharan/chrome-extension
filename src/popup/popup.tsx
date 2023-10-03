@@ -56,7 +56,11 @@ const Popup = () => {
 
   return (
     <div className="w-full p-4 bg-gray-100">
-      <h1 className="text-4xl text-green-500 mb-4">
+      <h1
+        className={`text-4xl text-green-500 mb-4 ${
+          stage === Stages.Input ? "flex justify-center" : ""
+        }`}
+      >
         {stage === Stages.Input ? "Actuarial Calculator" : "Result"}
       </h1>
       {stage === Stages.Input ? (
@@ -160,10 +164,7 @@ const Popup = () => {
         </div>
       ) : (
         // Stage 2: Result
-        <div className="text-center h-full">
-          <h2 className="text-3xl text-green-500 mb-4">
-            Actuarial Present Value
-          </h2>
+        <div className="text-center h-full space-y-12">
           <p className="text-xl mb-4">
             The Actuarial Present Value of that series of payments is:{" "}
             <span className="text-green-500 font-bold text-3xl">
