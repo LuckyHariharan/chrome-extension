@@ -152,4 +152,34 @@ const Popup = () => {
             </select>
           </div>
           <button
-            className="bg-green-500 text-white px-4 py-2
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
+            onClick={handleCalculate}
+          >
+            Calculate
+          </button>
+        </div>
+      ) : (
+        // Stage 2: Result
+        <div className="text-center h-full">
+          <h2 className="text-3xl text-green-500 mb-4">
+            Actuarial Present Value
+          </h2>
+          <p className="text-xl mb-4">
+            The Actuarial Present Value of that series of payments is:{" "}
+            <span className="text-green-500 font-bold text-3xl">
+              ${result || 0}
+            </span>
+          </p>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded hover-bg-blue-600"
+            onClick={handleBackToStage1}
+          >
+            Back to Input
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Popup;
