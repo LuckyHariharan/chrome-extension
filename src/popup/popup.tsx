@@ -34,6 +34,26 @@ const Popup = () => {
     setStage(Stages.Input); // Move back to the input stage
   };
 
+  // Function to format the interest rate input
+  const formatInterestRateInput = (value) => {
+    return value + "%";
+  };
+
+  // Function to parse the interest rate input
+  const parseInterestRateInput = (value) => {
+    return value.replace("%", "");
+  };
+
+  // Function to format the payment amount input
+  const formatPaymentAmountInput = (value) => {
+    return "$" + value;
+  };
+
+  // Function to parse the payment amount input
+  const parsePaymentAmountInput = (value) => {
+    return value.replace("$", "");
+  };
+
   return (
     <div className="w-full p-4 bg-gray-100">
       <h1 className="text-4xl text-green-500 mb-4">
@@ -87,7 +107,9 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={interestRate}
-              onChange={(e) => setInterestRate(e.target.value)}
+              onChange={(e) =>
+                setInterestRate(formatInterestRateInput(e.target.value))
+              }
             />
           </div>
           <div className="mb-4">
@@ -98,7 +120,9 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={paymentAmount}
-              onChange={(e) => setPaymentAmount(e.target.value)}
+              onChange={(e) =>
+                setPaymentAmount(formatPaymentAmountInput(e.target.value))
+              }
             />
           </div>
           <div className="mb-4">
@@ -136,7 +160,7 @@ const Popup = () => {
         </div>
       ) : (
         // Stage 2: Result
-        <div className="text-center">
+        <div className="text-center h-full">
           <h2 className="text-3xl text-green-500 mb-4">
             Actuarial Present Value
           </h2>
@@ -147,7 +171,7 @@ const Popup = () => {
             </span>
           </p>
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover-bg-blue-600"
             onClick={handleBackToStage1}
           >
             Back to Input
