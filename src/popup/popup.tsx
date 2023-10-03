@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./popup.css";
+import { useTransition, animated } from "react-spring";
 
 const Popup = () => {
   const Stages = {
@@ -47,12 +48,6 @@ const Popup = () => {
     return value;
   };
 
-  // Function to parse the interest rate input
-  const parseInterestRateInput = (value) => {
-    if (value[0] !== "%") return value + "%";
-  };
-
-  // Function to format the payment amount input
   // Function to format the payment amount input
   const formatPaymentAmountInput = (value) => {
     // Remove any existing dollar signs from the value
@@ -77,132 +72,120 @@ const Popup = () => {
     }
   };
 
-  // Function to parse the payment amount input
-  const parsePaymentAmountInput = (value) => {
-    if (value[0] !== "$") return "$" + value;
+  const fadeIn = {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }, // Updated leave opacity to 0
   };
+
+  const transitions = useTransition(true, {
+    ...fadeIn,
+  });
 
   return (
     <div className="w-full p-4 bg-gray-100">
       <h1 className={"text-4xl text-green-500 mb-4 flex justify-center "}>
         {stage === Stages.Input ? "Actuarial Calculator" : "Result"}
       </h1>
-      {stage === Stages.Input ? (
-        // Stage 1: Input Fields
-        <div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Gender</label>
-            <select
-              className="border rounded px-3 py-2 w-full"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-            >
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Smoking Status
-            </label>
-            <select
-              className="border rounded px-3 py-2 w-full"
-              value={smoking}
-              onChange={(e) => setSmoking(e.target.value)}
-            >
-              <option value="">Select Smoking Status</option>
-              <option value="smoker">Smoker</option>
-              <option value="non-smoker">Non-Smoker</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Number of Pay Periods
-            </label>
-            <input
-              type="text"
-              className="border rounded px-3 py-2 w-full"
-              value={periods}
-              onChange={(e) => setPeriods(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Interest Rate
-            </label>
-            <input
-              type="text"
-              className="border rounded px-3 py-2 w-full"
-              value={interestRate}
-              onChange={(e) =>
-                setInterestRate(formatInterestRateInput(e.target.value))
-              }
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Payment Amount
-            </label>
-            <input
-              type="text"
-              className="border rounded px-3 py-2 w-full"
-              value={paymentAmount}
-              onChange={(e) =>
-                setPaymentAmount(formatPaymentAmountInput(e.target.value))
-              }
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Payment Frequency
-            </label>
-            <select
-              className="border rounded px-3 py-2 w-full"
-              value={paymentFrequency}
-              onChange={(e) => setPaymentFrequency(e.target.value)}
-            >
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Payment Start Year
-            </label>
-            <select
-              className="border rounded px-3 py-2 w-full"
-              value={paymentStartYear}
-              onChange={(e) => setPaymentStartYear(e.target.value)}
-            >
-              <option value="0">Year 0</option>
-              <option value="1">Year 1</option>
-            </select>
-          </div>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
-            onClick={handleCalculate}
-          >
-            Calculate
-          </button>
-        </div>
-      ) : (
-        // Stage 2: Result
-        <div className="text-center h-full space-y-12">
-          <p className="text-xl mb-4">
-            The Actuarial Present Value of that series of payments is:{" "}
-            <span className="text-green-500 font-bold text-3xl">
-              ${result || 0}
-            </span>
-          </p>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover-bg-blue-600"
-            onClick={handleBackToStage1}
-          >
-            Back to Input
-          </button>
-        </div>
-      )}
+      {transitions((styles) => (
+        <animated.div style={{ ...styles, width: "100%" }}>
+          {/* Stage 1: Input Fields */}
+          {stage === Stages.Input && (
+            <div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">
+                  Gender
+                </label>
+                <select
+                  className="border rounded px-3 py-2 w-full"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">
+                  Smoking Status
+                </label>
+                <select
+                  className="border rounded px-3 py-2 w-full"
+                  value={smoking}
+                  onChange={(e) => setSmoking(e.target.value)}
+                >
+                  <option value="">Select Smoking Status</option>
+                  <option value="smoker">Smoker</option>
+                  <option value="non-smoker">Non-Smoker</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">
+                  Number of Pay Periods
+                </label>
+                <input
+                  type="text"
+                  className="border rounded px-3 py-2 w-full"
+                  value={periods}
+                  onChange={(e) => setPeriods(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">
+                  Interest Rate
+                </label>
+                <input
+                  type="text"
+                  className="border rounded px-3 py-2 w-full"
+                  value={interestRate}
+                  onChange={(e) =>
+                    setInterestRate(formatInterestRateInput(e.target.value))
+                  }
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2">
+                  Payment Amount
+                </label>
+                <input
+                  type="text"
+                  className="border rounded px-3 py-2 w-full"
+                  value={paymentAmount}
+                  onChange={(e) =>
+                    setPaymentAmount(formatPaymentAmountInput(e.target.value))
+                  }
+                />
+              </div>
+              {/* Add more input fields here as needed */}
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
+                onClick={handleCalculate}
+              >
+                Calculate
+              </button>
+            </div>
+          )}
+
+          {/* Stage 2: Result */}
+          {stage === Stages.Result && (
+            <div className="text-center h-full space-y-12">
+              <p className="text-xl mb-4">
+                The Actuarial Present Value of that series of payments is:{" "}
+                <span className="text-green-500 font-bold text-3xl">
+                  ${result || 0}
+                </span>
+              </p>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={handleBackToStage1}
+              >
+                Back to Input
+              </button>
+            </div>
+          )}
+        </animated.div>
+      ))}
     </div>
   );
 };
