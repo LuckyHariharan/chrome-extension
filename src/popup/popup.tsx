@@ -36,7 +36,7 @@ const Popup = () => {
 
   // Function to format the interest rate input
   const formatInterestRateInput = (value) => {
-    if (value[0] !== "%") return value + "%";
+    if (value[value.length - 1] !== "%") return value + "%";
   };
 
   // Function to parse the interest rate input
