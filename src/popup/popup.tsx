@@ -96,7 +96,7 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={periods}
-              onBlur={(e) => setPeriods(e.target.value)}
+              onChange={(e) => setPeriods(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -107,7 +107,7 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={interestRate}
-              onBlur={(e) =>
+              onChange={(e) =>
                 setInterestRate(formatInterestRateInput(e.target.value))
               }
             />
@@ -120,7 +120,7 @@ const Popup = () => {
               type="text"
               className="border rounded px-3 py-2 w-full"
               value={paymentAmount}
-              onBlur={(e) =>
+              onChange={(e) =>
                 setPaymentAmount(formatPaymentAmountInput(e.target.value))
               }
             />
