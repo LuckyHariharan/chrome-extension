@@ -1,20 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "react-boilerplate",
-  "description": "react-boilerplate for chrome extension",
+  "name": "Actuarial Present Value",
+  "description": "Actuarial Present Value Calculator",
   "version": "1.0.0",
   "action": {
     "default_popup": "popup.html",
     "default_title": "Actuarial Present Value",
-    "default_icon": "icon.png"
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
   },
-
   "permissions": ["tabs", "bookmarks", "storage", "identity"],
-  "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
-  },
   "options_page": "options.html",
   "background": {
     "service_worker": "background.js"
