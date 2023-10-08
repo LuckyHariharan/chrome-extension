@@ -19,6 +19,9 @@ const Popup = () => {
   const [stage, setStage] = useState(Stages.Input);
   const [result, setResult] = useState(null); // Result state
   const [age, setAge] = useState(15);
+  const [ageError, setAgeError] = useState(false);
+  const [payPeriodError, setPayPeriodError] = useState(false);
+
   // Function to format the interest rate input
   const reformatInterestRateInput = (value) => {
     // Remove any non-digit characters (except ".")
@@ -44,6 +47,22 @@ const Popup = () => {
   }
   // Function to handle the calculation when the button is clicked
   const handleCalculate = () => {
+    // Check for age < 15
+    if (age < 15) {
+      setAgeError(true);
+      return;
+    } else {
+      setAgeError(false);
+    }
+
+    // Check for payPeriod + age <= 100
+    if (parseInt(periods) + age > 100) {
+      setPayPeriodError(true);
+      return;
+    } else {
+      setPayPeriodError(false);
+    }
+
     const result = ActuarialCalculation(
       reformatInterestRateInput(interestRate),
       parseInt(periods),
@@ -51,7 +70,7 @@ const Popup = () => {
       parseCurrencyString(paymentAmount),
       age
     );
-    setResult(1234.56); // Example result
+    setResult(result); // Example result
     setStage(Stages.Result); // Move to the result stage
   };
 
@@ -134,12 +153,22 @@ const Popup = () => {
                     Age
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="border rounded px-3 py-2 w-full"
                     value={age}
-                    onChange={(e) => setAge(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      setAge(parseInt(e.target.value));
+                      if (ageError) {
+                        setAgeError(false);
+                      }
+                    }}
+                    min={15}
+                    max={100}
                   />
                 </div>
+                {ageError && (
+                  <p className="text-green-500">Age must be at least 15.</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2">
@@ -160,11 +189,23 @@ const Popup = () => {
                   Number of Pay Periods
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="border rounded px-3 py-2 w-full"
                   value={periods}
-                  onChange={(e) => setPeriods(e.target.value)}
+                  onChange={(e) => {
+                    setPeriods(e.target.value);
+                    if (payPeriodError) {
+                      setPayPeriodError(false);
+                    }
+                  }}
+                  min={0}
+                  max={85}
                 />
+                {payPeriodError && (
+                  <p className="text-green-500">
+                    The sum of Pay Periods and Age must not exceed 100.
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2">
@@ -192,7 +233,7 @@ const Popup = () => {
                   }
                 />
               </div>
-              {/* Add more input fields here as needed */}
+              {/* Rest of your input fields */}
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
                 onClick={handleCalculate}
