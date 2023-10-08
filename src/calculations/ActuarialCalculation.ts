@@ -45,7 +45,7 @@ const ActuarialCalculation = (
 
   return actuarialPresentValue;
 };
-
 // Example usage:
 const result = ActuarialCalculation(0.05, 10, "male", 1000, 30);
 console.log(result); // Replace with how you want to use the result
+export default ActuarialCalculation;
