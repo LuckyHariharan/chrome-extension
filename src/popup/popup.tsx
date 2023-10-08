@@ -45,12 +45,12 @@ const Popup = () => {
 
     return numberValue;
   }
+
   // Function to handle the calculation when the button is clicked
   const handleCalculate = () => {
     // Check for age < 15
     if (age < 15) {
       setAgeError(true);
-      return;
     } else {
       setAgeError(false);
     }
@@ -58,9 +58,12 @@ const Popup = () => {
     // Check for payPeriod + age <= 100
     if (parseInt(periods) + age > 100) {
       setPayPeriodError(true);
-      return;
     } else {
       setPayPeriodError(false);
+    }
+
+    if (ageError || payPeriodError) {
+      return;
     }
 
     const result = ActuarialCalculation(
@@ -125,6 +128,7 @@ const Popup = () => {
   const transitions = useTransition(true, {
     ...fadeIn,
   });
+
   return (
     <div className="w-full p-4 bg-gray-100">
       <h1 className={"text-4xl text-green-500 mb-4 flex justify-center "}>
@@ -167,7 +171,9 @@ const Popup = () => {
                   />
                 </div>
                 {ageError && (
-                  <p className="text-green-500">Age must be at least 15.</p>
+                  <p className="text-green-500 text-right pr-4">
+                    Age must be between 15 and 100.
+                  </p>
                 )}
               </div>
               <div className="mb-4">
@@ -202,7 +208,7 @@ const Popup = () => {
                   max={85}
                 />
                 {payPeriodError && (
-                  <p className="text-green-500">
+                  <p className="text-green-500 text-right pr-4">
                     The sum of Pay Periods and Age must not exceed 100.
                   </p>
                 )}
