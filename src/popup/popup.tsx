@@ -18,14 +18,39 @@ const Popup = () => {
   const [paymentStartYear, setPaymentStartYear] = useState("0");
   const [stage, setStage] = useState(Stages.Input);
   const [result, setResult] = useState(null); // Result state
+  const [age, setAge] = useState(15);
+  // Function to format the interest rate input
+  const reformatInterestRateInput = (value) => {
+    // Remove any non-digit characters (except ".")
+    value = value.replace(/[^\d.]/g, "");
 
+    // Ensure only one decimal point
+    const parts = value.split(".");
+    if (parts.length > 2) {
+      value = parts.slice(0, 2).join(".") + parts.slice(2).join("");
+    }
+
+    return value;
+  };
+
+  function parseCurrencyString(currencyString: string): number {
+    // Remove special characters ('$' and ',') from the input string
+    const sanitizedString = currencyString.replace(/[$,]/g, "");
+
+    // Parse the sanitized string into a number
+    const numberValue = parseFloat(sanitizedString);
+
+    return numberValue;
+  }
   // Function to handle the calculation when the button is clicked
   const handleCalculate = () => {
-    // Perform your present value calculation here
-    // You can use the selected values from the state
-    // and update the UI accordingly
-    // For now, let's assume the result is calculated and stored in 'result'.
-    // Replace this with your actual calculation logic.
+    const result = ActuarialCalculation(
+      reformatInterestRateInput(interestRate),
+      parseInt(periods),
+      gender,
+      parseCurrencyString(paymentAmount),
+      age
+    );
     setResult(1234.56); // Example result
     setStage(Stages.Result); // Move to the result stage
   };
@@ -81,7 +106,6 @@ const Popup = () => {
   const transitions = useTransition(true, {
     ...fadeIn,
   });
-
   return (
     <div className="w-full p-4 bg-gray-100">
       <h1 className={"text-4xl text-green-500 mb-4 flex justify-center "}>
@@ -96,15 +120,26 @@ const Popup = () => {
                 <label className="block text-gray-700 font-bold mb-2">
                   Gender
                 </label>
-                <select
-                  className="border rounded px-3 py-2 w-full"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
+                <div className="flex items-center">
+                  <select
+                    className="border rounded px-3 py-2 w-full"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  <label className="ml-4 text-gray-700 font-bold mb-2">
+                    Age
+                  </label>
+                  <input
+                    type="text"
+                    className="border rounded px-3 py-2 w-full"
+                    value={age}
+                    onChange={(e) => setAge(parseInt(e.target.value))}
+                  />
+                </div>
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2">
