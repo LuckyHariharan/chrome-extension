@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./popup.css";
 import { useTransition, animated } from "react-spring";
+import ActuarialCalculation from "../calculations/ActuarialCalculation";
 
 const Popup = () => {
   const Stages = {
@@ -48,6 +49,8 @@ const Popup = () => {
 
   // Function to handle the calculation when the button is clicked
   const handleCalculate = () => {
+    setTimeout(() => setStage(Stages.Result), 500);
+
     // Check for age < 15
     if (age < 15 || age > 100) {
       setAgeError(true);
@@ -57,6 +60,7 @@ const Popup = () => {
         setPayPeriodError(true);
       } else {
         setPayPeriodError(false);
+        setAgeError(false);
       }
     }
 
@@ -72,7 +76,6 @@ const Popup = () => {
         age
       );
       setResult(result);
-      setStage(Stages.Result);
     }
   };
 
@@ -118,15 +121,13 @@ const Popup = () => {
     }
   };
 
-  const fadeIn = {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  };
-
   const transitions = useTransition(stage, {
-    ...fadeIn,
+    from: { opacity: 0 }, // Initial opacity
+    enter: { opacity: 1 }, // Opacity when entering
+    leave: { opacity: 1 }, // Opacity when leaving
   });
+
+  // ... (rest of your component code)
 
   // Stage 1: Input Fields
   const stage1 = (
@@ -150,9 +151,6 @@ const Popup = () => {
             value={age}
             onChange={(e) => {
               setAge(parseInt(e.target.value));
-              if (ageError) {
-                setAgeError(false);
-              }
             }}
             min={15}
             max={100}
@@ -265,12 +263,9 @@ const Popup = () => {
       >
         {stage === Stages.Input ? "Actuarial Calculator" : "Result"}
       </h1>
-      {transitions((styles, item) => (
-        <animated.div style={{ ...styles, width: "100%" }}>
-          {item === Stages.Input && stage1}
-          {item === Stages.Result && stage2}
-        </animated.div>
-      ))}
+      <animated.div style={{ width: "100%", height: "100%" }}>
+        {stage === Stages.Input ? stage1 : stage2}
+      </animated.div>
     </div>
   );
 };
