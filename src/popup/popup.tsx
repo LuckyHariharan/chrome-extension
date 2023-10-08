@@ -49,7 +49,7 @@ const Popup = () => {
 
   // Function to handle the calculation when the button is clicked
   const handleCalculate = () => {
-    setTimeout(() => setStage(Stages.Result), 500);
+    setStage(Stages.Result);
 
     // Check for age < 15
     if (age < 15 || age > 100) {
