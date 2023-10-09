@@ -8,7 +8,6 @@ const ActuarialCalculation = (
 ): number => {
   const discountRateArray: number[] = [];
   const paymentArray: number[] = [];
-  console.log(interest, payPeriods, gender, payment, smokingStatus, age);
   // Step 1: Build the discount rate array using n=1,...,payPeriods (1/(1+i)^n)
   let discountRate = 1 / (1 + interest);
   for (let i = 0; i < payPeriods; i++) {
@@ -99,7 +98,12 @@ const ActuarialCalculation = (
     // Add it to the total
     actuarialPresentValue += presentValue;
   }
-
+  console.log(
+    "fit check",
+    actuarialPresentValue,
+    discountRateArray,
+    paymentArray
+  );
   return actuarialPresentValue;
 };
 // Example usage:
