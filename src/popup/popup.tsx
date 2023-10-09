@@ -13,7 +13,8 @@ const Popup = () => {
   const [gender, setGender] = useState<string>("");
   const [smoking, setSmoking] = useState<string>("");
   const [periods, setPeriods] = useState<string>("");
-  const [interestRate, setInterestRate] = useState<string>("");
+  const [interestRate, setInterestRate] = useState<string>("0%");
+  const [numericInterest, setNumericInterest] = useState<number>(0);
   const [paymentAmount, setPaymentAmount] = useState<string>("");
   const [paymentFrequency, setPaymentFrequency] = useState<string>("monthly");
   const [paymentStartYear, setPaymentStartYear] = useState<string>("0");
@@ -49,6 +50,26 @@ const Popup = () => {
 
   // Function to handle the calculation when the button is clicked
   const handleCalculate = () => {
+    setNumericInterest(parseFloat(interestRate.replace(/%/g, "")));
+    const result = ActuarialCalculation(
+      numericInterest / 100,
+      10,
+      "male",
+      1000,
+      "smoker",
+      30
+    );
+    console.log(
+      "true king",
+      gender,
+      smoking,
+      periods,
+      interestRate,
+      paymentAmount,
+      age,
+      result
+    ); // Replace with how you want to use the result
+
     setStage(Stages.Result);
 
     // Check for age < 15
@@ -65,14 +86,12 @@ const Popup = () => {
     }
 
     if (!ageError && !payPeriodError) {
-      const interestRateValue = parseFloat(
-        reformatInterestRateInput(interestRate)
-      ); // Parse the interest rate to a number
       const result = ActuarialCalculation(
-        interestRateValue, // Use the parsed interest rate
+        numericInterest / 100, // Use the parsed interest rate
         parseInt(periods),
         gender,
         parseCurrencyString(paymentAmount),
+        smoking,
         age
       );
       setResult(result);
@@ -120,14 +139,6 @@ const Popup = () => {
       return formattedDollars;
     }
   };
-
-  const transitions = useTransition(stage, {
-    from: { opacity: 0 }, // Initial opacity
-    enter: { opacity: 1 }, // Opacity when entering
-    leave: { opacity: 1 }, // Opacity when leaving
-  });
-
-  // ... (rest of your component code)
 
   // Stage 1: Input Fields
   const stage1 = (
