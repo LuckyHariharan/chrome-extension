@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./popup.css";
 import { useTransition, animated } from "react-spring";
 import ActuarialCalculation from "../calculations/ActuarialCalculation";
@@ -12,10 +12,10 @@ const Popup = () => {
   // State for dropdown selections
   const [gender, setGender] = useState<string>("");
   const [smoking, setSmoking] = useState<string>("");
-  const [periods, setPeriods] = useState<string>("");
-  const [interestRate, setInterestRate] = useState<string>("0%");
+  const [periods, setPeriods] = useState<string>("0");
+  const [interestRate, setInterestRate] = useState<string>("%");
   const [numericInterest, setNumericInterest] = useState<number>(0);
-  const [paymentAmount, setPaymentAmount] = useState<string>("");
+  const [paymentAmount, setPaymentAmount] = useState<string>("$");
   const [paymentFrequency, setPaymentFrequency] = useState<string>("monthly");
   const [paymentStartYear, setPaymentStartYear] = useState<string>("0");
   const [stage, setStage] = useState<number>(Stages.Input);
@@ -23,7 +23,10 @@ const Popup = () => {
   const [age, setAge] = useState<number>(15);
   const [ageError, setAgeError] = useState<boolean>(false);
   const [payPeriodError, setPayPeriodError] = useState<boolean>(false);
-
+  const [smokingStatusError, setSmokingStatusError] = useState<boolean>(false);
+  const [genderStatusError, setGenderStatusError] = useState<boolean>(false);
+  const [formattedResult, setFormattedResult] = useState<string>("");
+  const [disableButton, setDisableButton] = useState<boolean>(true);
   // Function to format the interest rate input
   const reformatInterestRateInput = (value: string): string => {
     // Remove any non-digit characters (except ".")
@@ -47,44 +50,25 @@ const Popup = () => {
 
     return numberValue;
   }
-
-  // Function to handle the calculation when the button is clicked
-  const handleCalculate = () => {
-    setNumericInterest(parseFloat(interestRate.replace(/%/g, "")));
-    const result = ActuarialCalculation(
-      numericInterest / 100,
-      10,
-      "male",
-      1000,
-      "smoker",
-      30
-    );
-    console.log(
-      "true king",
-      gender,
-      smoking,
-      periods,
-      interestRate,
-      paymentAmount,
-      age,
-      result
-    ); // Replace with how you want to use the result
-
-    setStage(Stages.Result);
-
-    // Check for age < 15
-    if (age < 15 || age > 100) {
-      setAgeError(true);
-    } else {
-      // Check for payPeriod + age <= 100
-      if (parseInt(periods) + age > 100) {
-        setPayPeriodError(true);
-      } else {
-        setPayPeriodError(false);
-        setAgeError(false);
-      }
+  const formatResult = (value: number): string => {
+    // Check if the value is not a number or is NaN
+    if (isNaN(value) || typeof value !== "number") {
+      return "$0.00";
     }
 
+    // Convert the number to a string and round it to two decimal places
+    const formattedValue = value.toFixed(2);
+
+    // Split the formatted string into dollars and cents parts
+    const [dollars, cents] = formattedValue.split(".");
+
+    // Add commas for thousands in the dollars part
+    const formattedDollars = dollars.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Reconstruct the formatted value with dollars and cents
+    return `$${formattedDollars}.${cents}`;
+  };
+  useEffect(() => {
     if (!ageError && !payPeriodError) {
       const result = ActuarialCalculation(
         numericInterest / 100, // Use the parsed interest rate
@@ -95,6 +79,76 @@ const Popup = () => {
         age
       );
       setResult(result);
+      setFormattedResult(formatResult(result));
+    }
+    if (gender !== "") {
+      setGenderStatusError(false);
+      setDisableButton(false);
+    }
+    if (age > 15 && age < 100) {
+      setAgeError(false);
+    }
+    if (smoking !== "") {
+      setSmokingStatusError(false);
+      setDisableButton(false);
+    }
+  });
+  // Function to handle the calculation when the button is clicked
+  const handleCalculate = () => {
+    if (smoking == "") {
+      setSmokingStatusError(true);
+      return;
+    }
+    if (gender == "") {
+      setGenderStatusError(true);
+      return;
+    }
+
+    // Check for age < 15
+    if (age < 15 || age > 100) {
+      setAgeError(true);
+      return;
+    } else {
+      // Check for payPeriod + age <= 100
+      if (parseInt(periods) + age > 100) {
+        setPayPeriodError(true);
+        return;
+      } else {
+        setPayPeriodError(false);
+        setAgeError(false);
+      }
+    }
+    if (
+      !ageError &&
+      !payPeriodError &&
+      !genderStatusError &&
+      !smokingStatusError
+    ) {
+      setNumericInterest(parseFloat(interestRate.replace(/%/g, "")));
+
+      const result = ActuarialCalculation(
+        numericInterest / 100, // Use the parsed interest rate
+        parseInt(periods),
+        gender,
+        parseCurrencyString(paymentAmount),
+        smoking,
+        age
+      );
+      setResult(result);
+      setFormattedResult(formatResult(result));
+    }
+    console.log(
+      "handle calc",
+      ageError,
+      genderStatusError,
+      smokingStatusError,
+      payPeriodError
+    );
+
+    if (ageError || genderStatusError || smokingStatusError || payPeriodError) {
+      return;
+    } else {
+      setStage(Stages.Result);
     }
   };
 
@@ -118,13 +172,8 @@ const Popup = () => {
 
   // Function to format the payment amount input
   const formatPaymentAmountInput = (value: string): string => {
-    // Remove any existing dollar signs from the value
-    value = value.replace(/\$/g, "");
-
-    // Add a dollar sign at the beginning if it's not already there
-    if (value[0] !== "$") {
-      value = "$" + value;
-    }
+    // Remove any existing dollar signs and commas from the value
+    value = value.replace(/[$,]/g, "");
 
     // Split the value into dollars and cents (if present)
     const [dollars, cents] = value.split(".");
@@ -134,32 +183,34 @@ const Popup = () => {
 
     // Reconstruct the formatted value with dollars and cents
     if (cents !== undefined) {
-      return formattedDollars + "." + cents;
+      return "$" + formattedDollars + "." + cents;
     } else {
-      return formattedDollars;
+      return "$" + formattedDollars;
     }
   };
 
   // Stage 1: Input Fields
   const stage1 = (
-    <div>
-      <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2">Gender</label>
+    <div className="">
+      <div className="mb-4 ">
+        <label className="block text-gray-900 font-bold mb-2">Gender</label>
         <div className="flex items-center">
           <select
             className="border rounded px-3 py-2 w-full"
             value={gender}
             onChange={(e) => setGender(e.target.value)}
+            onSelect={(e) => setGenderStatusError(false)}
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          <label className="ml-4 text-gray-700 font-bold mb-2">Age</label>
+          <label className="ml-4 text-gray-900 font-bold mb-2">Age</label>
           <input
             type="number"
             className="border rounded px-3 py-2 w-full"
             value={age}
+            onSelect={(e) => setAgeError(false)}
             onChange={(e) => {
               setAge(parseInt(e.target.value));
             }}
@@ -167,26 +218,40 @@ const Popup = () => {
             max={100}
           />
         </div>
+        {genderStatusError && (
+          <p className="text-green-500 text-left pr-4">
+            Please select a gender.
+          </p>
+        )}
         {ageError && (
-          <p className="text-green-500 text-right pr-4">
+          <p className="text-green-500 text-left pr-4">
             Age must be between 15 and 100.
           </p>
         )}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 font-bold mb-2">
-          Smoking Status
-        </label>
-        <select
-          className="border rounded px-3 py-2 w-full"
-          value={smoking}
-          onChange={(e) => setSmoking(e.target.value)}
-        >
-          <option value="">Select Smoking Status</option>
-          <option value="smoker">Smoker</option>
-          <option value="non-smoker">Non-Smoker</option>
-        </select>
+        <div>
+          <label className="block text-gray-700 font-bold mb-2">
+            Smoking Status
+          </label>
+          <select
+            className="border rounded px-3 py-2 w-full"
+            value={smoking}
+            onChange={(e) => setSmoking(e.target.value)}
+            onSelect={(e) => setSmokingStatusError(false)}
+          >
+            <option value="">Select Smoking Status</option>
+            <option value="smoker">Smoker</option>
+            <option value="non-smoker">Non-Smoker</option>
+          </select>
+        </div>
+        {smokingStatusError && (
+          <p className="text-green-500 text-left pr-4">
+            Please select a smoking status.
+          </p>
+        )}
       </div>
+
       <div className="mb-4">
         <label className="block text-gray-700 font-bold mb-2">
           Number of Pay Periods
@@ -195,6 +260,10 @@ const Popup = () => {
           type="number"
           className="border rounded px-3 py-2 w-full"
           value={periods}
+          onSelect={(e) => {
+            setPeriods("");
+            setPayPeriodError(false);
+          }}
           onChange={(e) => {
             setPeriods(e.target.value);
             if (payPeriodError) {
@@ -221,6 +290,13 @@ const Popup = () => {
           onChange={(e) =>
             setInterestRate(formatInterestRateInput(e.target.value))
           }
+          onKeyDown={(e) => {
+            // Check if the pressed key is the backspace key
+            if (e.key === "Backspace") {
+              // Handle backspace key here (if needed)
+              setInterestRate("");
+            }
+          }}
         />
       </div>
       <div className="mb-4">
@@ -239,6 +315,7 @@ const Popup = () => {
       <button
         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
         onClick={handleCalculate}
+        hidden={disableButton}
       >
         Calculate
       </button>
@@ -247,11 +324,11 @@ const Popup = () => {
 
   // Stage 2: Result
   const stage2 = (
-    <div className="text-center h-full space-y-12">
-      <p className="text-xl mb-4">
+    <div className="text-center h-full space-y-12  ">
+      <p className="text-xl mb-4 ">
         The Actuarial Present Value of that series of payments is:{" "}
-        <span className="text-green-500 font-bold text-3xl">
-          ${result || 0}
+        <span className="text-green-600 font-bold text-3xl">
+          {formattedResult || "0"}
         </span>
       </p>
       <div className="py-32">
@@ -266,15 +343,13 @@ const Popup = () => {
   );
 
   return (
-    <div className="w-full p-4 bg-gray-100">
+    <div className="w-full p-4 bg-gray-200">
       <h1
-        className={`text-4xl mb-4 ${
-          stage === Stages.Input
-            ? "text-green-500 animate__animated animate__bounce"
-            : "text-blue-500"
+        className={`text-2xl mb-4  ${
+          stage === Stages.Input ? "text-green-500 font-bold " : "text-blue-500"
         } flex justify-center`}
       >
-        {stage === Stages.Input ? "Actuarial Calculator" : "Result"}
+        {stage === Stages.Input ? "Actuarial Present Value" : "Result"}
       </h1>
       <animated.div style={{ width: "100%", height: "100%" }}>
         {stage === Stages.Input ? stage1 : stage2}
