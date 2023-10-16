@@ -7,7 +7,6 @@
     "default_popup": "popup.html",
     "default_title": "Actuarial Present Value"
   },
-  "permissions": ["tabs", "bookmarks", "storage", "identity"],
   "options_page": "options.html",
   "background": {
     "service_worker": "background.js"
