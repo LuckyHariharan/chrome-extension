@@ -193,7 +193,14 @@ const Popup = () => {
   const stage1 = (
     <div className="">
       <div className="mb-4 ">
-        <label className="block text-gray-900 font-bold mb-2">Gender</label>
+        <div className="flex justify-between">
+          <label className="block text-gray-900 font-bold mb-2">Gender</label>
+
+          <label className=" text-gray-900 font-bold mb-2 text-right">
+            Age
+          </label>
+          <div></div>
+        </div>
         <div className="flex items-center">
           <select
             className="border rounded px-3 py-2 w-full"
@@ -205,7 +212,6 @@ const Popup = () => {
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          <label className="ml-4 text-gray-900 font-bold mb-2">Age</label>
           <input
             type="number"
             className="border rounded px-3 py-2 w-full"
