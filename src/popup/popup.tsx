@@ -156,6 +156,17 @@ const Popup = () => {
   // Function to handle going back to the input stage
   const handleBackToStage1 = () => {
     setStage(Stages.Input); // Move back to the input stage
+    const handleBackToStage1 = () => {
+      setStage(Stages.Input); // Move back to the input stage
+      setInputFieldsFocused({
+        gender: false,
+        age: false,
+        smoking: false,
+        periods: false,
+        interestRate: false,
+        paymentAmount: false,
+      });
+    };
   };
 
   // Function to format the interest rate input
@@ -233,7 +244,7 @@ const Popup = () => {
           </select>
           <input
             type="number"
-            className={`border rounded px-3 py-2 w-full ${
+            className={`border rounded px-3  py-2 w-full ${
               inputFieldsFocused.age ? "border-black" : ""
             }`}
             value={age}
@@ -289,7 +300,7 @@ const Popup = () => {
         </label>
         <input
           type="number"
-          className={`border rounded px-3 py-2 w-full ${
+          className={`border rounded  px-3 py-2 w-full ${
             inputFieldsFocused.periods ? "border-black" : ""
           }`}
           value={periods}
@@ -319,7 +330,7 @@ const Popup = () => {
         </label>
         <input
           type="text"
-          className={`border rounded px-3 py-2 w-full ${
+          className={`border rounded  px-3 py-2 w-full ${
             inputFieldsFocused.interestRate ? "border-black" : ""
           }`}
           value={interestRate}
@@ -342,7 +353,7 @@ const Popup = () => {
         </label>
         <input
           type="text"
-          className={`border rounded px-3 py-2 w-full ${
+          className={`border rounded px-3 py-2  w-full ${
             inputFieldsFocused.paymentAmount ? "border-black" : ""
           }`}
           value={paymentAmount}
@@ -382,7 +393,7 @@ const Popup = () => {
   );
 
   return (
-    <div className="w-full p-4 bg-gray-200">
+    <div className="w-full p-4 bg-slate-200">
       <h1
         className={`text-2xl mb-4  ${
           stage === Stages.Input
