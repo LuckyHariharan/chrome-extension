@@ -27,6 +27,7 @@ const Popup = () => {
   const [genderStatusError, setGenderStatusError] = useState<boolean>(false);
   const [formattedResult, setFormattedResult] = useState<string>("");
   const [disableButton, setDisableButton] = useState<boolean>(true);
+
   // Function to format the interest rate input
   const reformatInterestRateInput = (value: string): string => {
     // Remove any non-digit characters (except ".")
@@ -188,25 +189,43 @@ const Popup = () => {
       return "$" + formattedDollars;
     }
   };
+  // State to track if input fields have been focused (changed) by the user
+  const [inputFieldsFocused, setInputFieldsFocused] = useState({
+    gender: false,
+    age: false,
+    smoking: false,
+    periods: false,
+    interestRate: false,
+    paymentAmount: false,
+  });
 
-  // Stage 1: Input Fields
+  // Function to handle input field blur
+  const handleInputBlur = (fieldName) => {
+    setInputFieldsFocused((prevInputFieldsFocused) => ({
+      ...prevInputFieldsFocused,
+      [fieldName]: true,
+    }));
+  };
+
+  // ...
+
   const stage1 = (
     <div className="">
       <div className="mb-4 ">
         <div className="flex justify-between">
           <label className="block text-gray-900 font-bold mb-2">Gender</label>
-
-          <label className=" text-gray-900 font-bold mb-2 text-right">
-            Age
-          </label>
+          <label className="text-gray-900 font-bold mb-2 text-right">Age</label>
           <div></div>
         </div>
         <div className="flex items-center">
           <select
-            className="border rounded px-3 py-2 w-full"
+            className={`border rounded px-3 py-2 w-full ${
+              inputFieldsFocused.gender ? "border-black" : ""
+            }`}
             value={gender}
             onChange={(e) => setGender(e.target.value)}
             onSelect={(e) => setGenderStatusError(false)}
+            onBlur={() => handleInputBlur("gender")}
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
@@ -214,7 +233,9 @@ const Popup = () => {
           </select>
           <input
             type="number"
-            className="border rounded px-3 py-2 w-full"
+            className={`border rounded px-3 py-2 w-full ${
+              inputFieldsFocused.age ? "border-black" : ""
+            }`}
             value={age}
             onSelect={(e) => setAgeError(false)}
             onChange={(e) => {
@@ -222,14 +243,15 @@ const Popup = () => {
             }}
             min={15}
             max={100}
+            onBlur={() => handleInputBlur("age")}
           />
         </div>
-        {genderStatusError && (
+        {genderStatusError && !inputFieldsFocused.gender && (
           <p className="text-green-500 text-left pr-4">
             Please select a gender.
           </p>
         )}
-        {ageError && (
+        {ageError && !inputFieldsFocused.age && (
           <p className="text-green-500 text-left pr-4">
             Age must be between 15 and 100.
           </p>
@@ -241,17 +263,20 @@ const Popup = () => {
             Smoking Status
           </label>
           <select
-            className="border rounded px-3 py-2 w-full"
+            className={`border rounded px-3 py-2 w-full ${
+              inputFieldsFocused.smoking ? "border-black" : ""
+            }`}
             value={smoking}
             onChange={(e) => setSmoking(e.target.value)}
             onSelect={(e) => setSmokingStatusError(false)}
+            onBlur={() => handleInputBlur("smoking")}
           >
             <option value="">Select Smoking Status</option>
             <option value="smoker">Smoker</option>
             <option value="non-smoker">Non-Smoker</option>
           </select>
         </div>
-        {smokingStatusError && (
+        {smokingStatusError && !inputFieldsFocused.smoking && (
           <p className="text-green-500 text-left pr-4">
             Please select a smoking status.
           </p>
@@ -264,7 +289,9 @@ const Popup = () => {
         </label>
         <input
           type="number"
-          className="border rounded px-3 py-2 w-full"
+          className={`border rounded px-3 py-2 w-full ${
+            inputFieldsFocused.periods ? "border-black" : ""
+          }`}
           value={periods}
           onSelect={(e) => {
             setPeriods("");
@@ -278,8 +305,9 @@ const Popup = () => {
           }}
           min={0}
           max={85}
+          onBlur={() => handleInputBlur("periods")}
         />
-        {payPeriodError && (
+        {payPeriodError && !inputFieldsFocused.periods && (
           <p className="text-green-500 text-right pr-4">
             The sum of Pay Periods and Age must not exceed 100.
           </p>
@@ -291,7 +319,9 @@ const Popup = () => {
         </label>
         <input
           type="text"
-          className="border rounded px-3 py-2 w-full"
+          className={`border rounded px-3 py-2 w-full ${
+            inputFieldsFocused.interestRate ? "border-black" : ""
+          }`}
           value={interestRate}
           onChange={(e) =>
             setInterestRate(formatInterestRateInput(e.target.value))
@@ -303,6 +333,7 @@ const Popup = () => {
               setInterestRate("");
             }
           }}
+          onBlur={() => handleInputBlur("interestRate")}
         />
       </div>
       <div className="mb-4">
@@ -311,15 +342,18 @@ const Popup = () => {
         </label>
         <input
           type="text"
-          className="border rounded px-3 py-2 w-full"
+          className={`border rounded px-3 py-2 w-full ${
+            inputFieldsFocused.paymentAmount ? "border-black" : ""
+          }`}
           value={paymentAmount}
           onChange={(e) =>
             setPaymentAmount(formatPaymentAmountInput(e.target.value))
           }
+          onBlur={() => handleInputBlur("paymentAmount")}
         />
       </div>
       <button
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
+        className="bg-green-500 text-white px-4 py-2 rounded hover-bg-green-600 mt-4"
         onClick={handleCalculate}
         hidden={disableButton}
       >
@@ -327,7 +361,6 @@ const Popup = () => {
       </button>
     </div>
   );
-
   // Stage 2: Result
   const stage2 = (
     <div className="text-center h-full space-y-12  ">
@@ -352,7 +385,9 @@ const Popup = () => {
     <div className="w-full p-4 bg-gray-200">
       <h1
         className={`text-2xl mb-4  ${
-          stage === Stages.Input ? "text-green-500 font-bold " : "text-blue-500"
+          stage === Stages.Input
+            ? "text-black font-bold "
+            : "text-black font-bold"
         } flex justify-center`}
       >
         {stage === Stages.Input ? "Actuarial Present Value" : "Result"}
