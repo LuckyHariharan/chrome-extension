@@ -153,22 +153,17 @@ const Popup = () => {
     }
   };
 
-  // Function to handle going back to the input stage
   const handleBackToStage1 = () => {
     setStage(Stages.Input); // Move back to the input stage
-    const handleBackToStage1 = () => {
-      setStage(Stages.Input); // Move back to the input stage
-      setInputFieldsFocused({
-        gender: false,
-        age: false,
-        smoking: false,
-        periods: false,
-        interestRate: false,
-        paymentAmount: false,
-      });
-    };
+    setInputFieldsFocused({
+      gender: false,
+      age: false,
+      smoking: false,
+      periods: false,
+      interestRate: false,
+      paymentAmount: false,
+    });
   };
-
   // Function to format the interest rate input
   const formatInterestRateInput = (value: string): string => {
     // Remove any existing percent symbols from the value
