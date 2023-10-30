@@ -93,17 +93,12 @@ const ActuarialCalculation = (
     const presentValue =
       paymentArray[i] *
       discountRateArray[i] *
-      (1 - mortalityArray[i + age - 15]);
+      (1 - mortalityArray[i + age - 15]); // 1- mortality is chance of living next year, the fisrt mortality value is age 15
 
     // Add it to the total
     actuarialPresentValue += presentValue;
   }
-  console.log(
-    "fit check",
-    actuarialPresentValue,
-    discountRateArray,
-    paymentArray
-  );
+
   return actuarialPresentValue;
 };
 // Example usage:

@@ -141,13 +141,6 @@ const Popup = () => {
       setResult(result);
       setFormattedResult(formatResult(result));
     }
-    console.log(
-      "handle calc",
-      ageError,
-      genderStatusError,
-      smokingStatusError,
-      payPeriodError
-    );
 
     if (ageError || genderStatusError || smokingStatusError || payPeriodError) {
       return;
@@ -208,14 +201,6 @@ const Popup = () => {
     paymentAmount: false,
   });
 
-  // Function to handle input field blur
-  const handleInputBlur = (fieldName) => {
-    setInputFieldsFocused((prevInputFieldsFocused) => ({
-      ...prevInputFieldsFocused,
-      [fieldName]: true,
-    }));
-  };
-
   // ...
 
   const stage1 = (
@@ -234,7 +219,6 @@ const Popup = () => {
             value={gender}
             onChange={(e) => setGender(e.target.value)}
             onSelect={(e) => setGenderStatusError(false)}
-            onBlur={() => handleInputBlur("gender")}
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
@@ -252,7 +236,6 @@ const Popup = () => {
             }}
             min={15}
             max={100}
-            onBlur={() => handleInputBlur("age")}
           />
         </div>
         {genderStatusError && !inputFieldsFocused.gender && (
@@ -261,7 +244,7 @@ const Popup = () => {
           </p>
         )}
         {ageError && !inputFieldsFocused.age && (
-          <p className="text-green-500 text-left pr-4">
+          <p className="text-green-500 text-right pr-4">
             Age must be between 15 and 100.
           </p>
         )}
@@ -278,7 +261,6 @@ const Popup = () => {
             value={smoking}
             onChange={(e) => setSmoking(e.target.value)}
             onSelect={(e) => setSmokingStatusError(false)}
-            onBlur={() => handleInputBlur("smoking")}
           >
             <option value="">Select Smoking Status</option>
             <option value="smoker">Smoker</option>
@@ -314,7 +296,6 @@ const Popup = () => {
           }}
           min={0}
           max={85}
-          onBlur={() => handleInputBlur("periods")}
         />
         {payPeriodError && !inputFieldsFocused.periods && (
           <p className="text-green-500 text-right pr-4">
@@ -342,7 +323,6 @@ const Popup = () => {
               setInterestRate("");
             }
           }}
-          onBlur={() => handleInputBlur("interestRate")}
         />
       </div>
       <div className="mb-4">
@@ -358,7 +338,6 @@ const Popup = () => {
           onChange={(e) =>
             setPaymentAmount(formatPaymentAmountInput(e.target.value))
           }
-          onBlur={() => handleInputBlur("paymentAmount")}
         />
       </div>
       <button
