@@ -9,6 +9,9 @@ const Popup = () => {
     Result: 2,
   };
 
+  // State for Retirement or Actuarial Button
+  const [isActuarialMode, setIsActuarialMode] = useState<boolean>(true);
+
   // State for dropdown selections
   const [gender, setGender] = useState<string>("");
   const [smoking, setSmoking] = useState<string>("");
@@ -396,7 +399,9 @@ const Popup = () => {
             : "text-black font-bold"
         } flex justify-center`}
       >
-        {stage === Stages.Input ? "Actuarial Present Value" : "Result"}
+        {isActuarialMode && stage === Stages.Input
+          ? "Actuarial Present Value"
+          : "Result"}
       </h1>
       <animated.div style={{ width: "100%", height: "100%" }}>
         {stage === Stages.Input ? stage1 : stage2}
