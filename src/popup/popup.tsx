@@ -23,13 +23,16 @@ const Popup = () => {
   const [paymentStartYear, setPaymentStartYear] = useState<string>("0");
   const [stage, setStage] = useState<number>(Stages.Input);
   const [result, setResult] = useState<number | null>(null); // Result state
+  const [ageDisplay, setAgeDisplay] = useState<number | "">(15);
   const [age, setAge] = useState<number>(15);
+
   const [ageError, setAgeError] = useState<boolean>(false);
   const [payPeriodError, setPayPeriodError] = useState<boolean>(false);
   const [smokingStatusError, setSmokingStatusError] = useState<boolean>(false);
   const [genderStatusError, setGenderStatusError] = useState<boolean>(false);
   const [formattedResult, setFormattedResult] = useState<string>("");
   const [disableButton, setDisableButton] = useState<boolean>(true);
+  const [previousAge, setPreviousAge] = useState(15); // Store the previous age
 
   // Function to format the interest rate input
   const reformatInterestRateInput = (value: string): string => {
@@ -201,8 +204,13 @@ const Popup = () => {
     paymentAmount: false,
   });
 
-  // ...
-
+  const handleInputBlur = () => {
+    // If the user didn't change the value and clicked away, reset to the previous value
+    if (age === previousAge) {
+      setAge(previousAge);
+      setAgeDisplay(age);
+    }
+  };
   const stage1 = (
     <div className="">
       <div className="mb-4 ">
@@ -225,15 +233,17 @@ const Popup = () => {
             <option value="female">Female</option>
           </select>
           <input
-            type="number"
             className={`border rounded px-3  py-2 w-full ${
               inputFieldsFocused.age ? "border-black" : ""
             }`}
-            value={age}
+            value={ageDisplay}
             onSelect={(e) => setAgeError(false)}
             onChange={(e) => {
+              setAgeDisplay(parseInt(e.target.value));
               setAge(parseInt(e.target.value));
             }}
+            onBlur={handleInputBlur}
+            onClick={() => setAgeDisplay("")}
             min={15}
             max={100}
           />
@@ -298,7 +308,7 @@ const Popup = () => {
           max={85}
         />
         {payPeriodError && !inputFieldsFocused.periods && (
-          <p className="text-green-500 text-right pr-4">
+          <p className="text-green-500 text-left pr-4">
             The sum of Pay Periods and Age must not exceed 100.
           </p>
         )}
