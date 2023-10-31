@@ -449,7 +449,7 @@ const Popup = () => {
             <div>
               <div className="flex justify-start  mb-8">
                 <div className="flex flex-col w-full">
-                  <p>V1.01 </p>
+                  <p>V1.02 </p>
                   <p>Lakshman Hariharan </p>
                 </div>
                 <input
