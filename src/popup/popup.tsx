@@ -381,7 +381,7 @@ const Popup = () => {
   return (
     <div className="w-full p-4 bg-slate-200">
       <h1
-        className={`text-2xl  ${
+        className={`text-2xl mb-8 ${
           stage === Stages.Input
             ? "text-black font-bold"
             : "text-black font-bold"
@@ -395,17 +395,25 @@ const Popup = () => {
         {stage === Stages.Input ? (
           <>
             <div className="flex flex-col mb-4">
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <div className="flex flex-col">
                   <p>Lakshman Hariharan</p>
                   <p>V1.01</p>
                   <input
-                    className="border  w-32 text-gray-500"
+                    className="border w-32 text-gray-500 p-2"
                     placeholder="Enter Profile Name"
                   />
                 </div>
-
-                <div className="bg-white rounded border-2 p-4 w-full ml-4"></div>
+                <div className="bg-white rounded border-2 p-4 w-full ml-4">
+                  <p>
+                    {age}
+                    {gender}
+                    {smoking}
+                    {interestRate}
+                    {paymentAmount}
+                    {paymentFrequency}
+                  </p>
+                </div>
               </div>
             </div>
             {stage1}
