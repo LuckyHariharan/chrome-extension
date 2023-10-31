@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./popup.css";
 import { useTransition, animated } from "react-spring";
 import ActuarialCalculation from "../calculations/ActuarialCalculation";
+import { SensitivityCalculation } from "../calculations/SensitivityCalculation";
 
 const Popup = () => {
   const Stages = {
@@ -34,7 +35,18 @@ const Popup = () => {
   const [formattedResult, setFormattedResult] = useState<string>("");
   const [disableButton, setDisableButton] = useState<boolean>(true);
   const [previousAge, setPreviousAge] = useState(15); // Store the previous age
-
+  const [sensitivityResult, setSensitivityResult] =
+    useState<SensitivityResult>(null); // Initialize as null
+  // Define the type for your sensitivity result
+  type SensitivityResult = {
+    lowerRangeAPV: number;
+    lowerCashValue65: number;
+    lowerCashValue85: number;
+    higherRangeAPV: number;
+    higherCashValue65: number;
+    higherCashValue85: number;
+    cashValue65: number;
+  };
   // Function to format the interest rate input
   const reformatInterestRateInput = (value: string): string => {
     // Remove any non-digit characters (except ".")
@@ -86,7 +98,16 @@ const Popup = () => {
         smoking,
         age
       );
+      const sensitivityResult = SensitivityCalculation(
+        numericInterest / 100, // Use the parsed interest rate
+        parseInt(periods),
+        gender,
+        parseCurrencyString(paymentAmount),
+        smoking,
+        age
+      );
       setResult(result);
+      setSensitivityResult(sensitivityResult);
       setFormattedResult(formatResult(result));
     }
     if (gender !== "") {
@@ -368,13 +389,36 @@ const Popup = () => {
   );
   // Stage 2: Result
   const stage2 = (
-    <div className="text-center h-full space-y-12  ">
+    <div className="text-center h-full space-y-12 w-full ">
       <p className="text-xl mb-4 ">
         The Actuarial Present Value of that series of payments is:{" "}
         <span className="text-green-600 font-bold text-3xl">
           {formattedResult || "0"}
         </span>
       </p>
+      <div className="grid grid-cols-4 bg-white w-full space-y-4 px-4">
+        <p></p>
+        <p className="font-bold underline">interest-0.10%</p>
+        <p className="font-bold underline">interest</p>
+        <p className="font-bold underline">interest+0.10%</p>
+        <p className="font-bold ">Cash Value age=65</p>
+        <p>
+          {sensitivityResult &&
+            formatResult(sensitivityResult.lowerCashValue65 || 0)}
+        </p>
+        <p>
+          {sensitivityResult &&
+            formatResult(sensitivityResult.cashValue65 || 0)}
+        </p>
+        <p>
+          {sensitivityResult &&
+            formatResult(sensitivityResult.higherCashValue65 || 0)}
+        </p>{" "}
+        {/* <p className="font-bold">Cash Value age=85</p>
+        <p></p>
+        <p></p>
+        <p></p> */}
+      </div>
       <div className="py-32">
         <button
           className="bg-blue-500 text-white px-4 py-4 rounded hover:bg-blue-600 "
