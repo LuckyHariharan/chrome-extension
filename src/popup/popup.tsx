@@ -16,6 +16,7 @@ const Popup = () => {
   const [gender, setGender] = useState<string>("");
   const [smoking, setSmoking] = useState<string>("");
   const [periods, setPeriods] = useState<string>("0");
+  const [periodsDisplay, setPeriodsDisplay] = useState<string>("0");
   const [interestRate, setInterestRate] = useState<string>("%");
   const [numericInterest, setNumericInterest] = useState<number>(0);
   const [paymentAmount, setPaymentAmount] = useState<string>("$");
@@ -237,7 +238,9 @@ const Popup = () => {
               inputFieldsFocused.age ? "border-black" : ""
             }`}
             value={ageDisplay}
-            onSelect={(e) => setAgeError(false)}
+            onSelect={(e) => {
+              setAgeError(false);
+            }}
             onChange={(e) => {
               setAgeDisplay(parseInt(e.target.value));
               setAge(parseInt(e.target.value));
@@ -289,24 +292,22 @@ const Popup = () => {
           Number of Pay Periods
         </label>
         <input
-          type="number"
-          className={`border rounded  px-3 py-2 w-full ${
+          className={`border rounded px-3 py-2 w-full ${
             inputFieldsFocused.periods ? "border-black" : ""
           }`}
-          value={periods}
+          value={periodsDisplay}
           onSelect={(e) => {
-            setPeriods("");
             setPayPeriodError(false);
           }}
           onChange={(e) => {
-            setPeriods(e.target.value);
-            if (payPeriodError) {
-              setPayPeriodError(false);
-            }
+            const inputValue = e.target.value;
+            setPeriods(inputValue); // Update the state with the input value
+            setPeriodsDisplay(inputValue);
           }}
           min={0}
           max={85}
         />
+
         {payPeriodError && !inputFieldsFocused.periods && (
           <p className="text-green-500 text-left pr-4">
             The sum of Pay Periods and Age must not exceed 100.
@@ -409,15 +410,25 @@ const Popup = () => {
                 />
               </div>
               <div>
-                Illustration Details
-                <div className="flex bg-white rounded border-2 border-black p-4 w-full mb-2">
+                <p className="font-bold">Illustration Details</p>
+                <div
+                  className="flex bg-white rounded border-2 border-black p-4 w-full mb-2"
+                  style={{ height: "60px", overflowY: "auto" }}
+                >
                   <p>
-                    {age}
-                    {gender}
-                    {smoking}
-                    {interestRate}
-                    {paymentAmount}
-                    {paymentFrequency}
+                    {age !== 15 && `${age} `}
+                    {gender && `${gender} `}
+                    {smoking && `${smoking} `}
+                    {paymentAmount !== "$" && `${paymentAmount} `}
+                    {interestRate !== "%" && `${interestRate} `}
+                    {periods &&
+                    !isNaN(parseInt(periods)) &&
+                    parseInt(periods) !== 0 ? (
+                      <span>
+                        {parseInt(periods)}{" "}
+                        {parseInt(periods) === 1 ? "year" : "years"}
+                      </span>
+                    ) : null}
                   </p>
                 </div>
               </div>
