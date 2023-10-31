@@ -404,7 +404,7 @@ const Popup = () => {
                     placeholder="Enter Profile Name"
                   />
                 </div>
-                <div className="bg-white rounded border-2 p-4 w-full ml-4">
+                <div className="bg-white rounded border-2 border-black p-4 w-full ml-4">
                   <p>
                     {age}
                     {gender}
