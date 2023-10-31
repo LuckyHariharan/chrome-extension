@@ -394,9 +394,19 @@ const Popup = () => {
       <div>
         {stage === Stages.Input ? (
           <>
-            <div className="flex flex-col justify-start mb-4">
-              <p>Lakshman Hariharan</p>
-              <p>V1.01</p>
+            <div className="flex flex-col mb-4">
+              <div className="flex justify-between">
+                <div className="flex flex-col">
+                  <p>Lakshman Hariharan</p>
+                  <p>V1.01</p>
+                  <input
+                    className="border  w-32 text-gray-500"
+                    placeholder="Enter Profile Name"
+                  />
+                </div>
+
+                <div className="bg-white rounded border-2 p-4 w-full ml-4"></div>
+              </div>
             </div>
             {stage1}
           </>
