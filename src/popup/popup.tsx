@@ -25,7 +25,6 @@ const Popup = () => {
   const [result, setResult] = useState<number | null>(null); // Result state
   const [ageDisplay, setAgeDisplay] = useState<number | "">(15);
   const [age, setAge] = useState<number>(15);
-
   const [ageError, setAgeError] = useState<boolean>(false);
   const [payPeriodError, setPayPeriodError] = useState<boolean>(false);
   const [smokingStatusError, setSmokingStatusError] = useState<boolean>(false);
@@ -382,9 +381,9 @@ const Popup = () => {
   return (
     <div className="w-full p-4 bg-slate-200">
       <h1
-        className={`text-2xl mb-4  ${
+        className={`text-2xl  ${
           stage === Stages.Input
-            ? "text-black font-bold "
+            ? "text-black font-bold"
             : "text-black font-bold"
         } flex justify-center`}
       >
@@ -392,9 +391,19 @@ const Popup = () => {
           ? "Actuarial Present Value"
           : "Result"}
       </h1>
-      <animated.div style={{ width: "100%", height: "100%" }}>
-        {stage === Stages.Input ? stage1 : stage2}
-      </animated.div>
+      <div>
+        {stage === Stages.Input ? (
+          <>
+            <div className="flex flex-col justify-start mb-4">
+              <p>Lakshman Hariharan</p>
+              <p>V1.01</p>
+            </div>
+            {stage1}
+          </>
+        ) : (
+          stage2
+        )}
+      </div>
     </div>
   );
 };
