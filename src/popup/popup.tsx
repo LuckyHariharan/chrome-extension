@@ -18,6 +18,7 @@ const Popup = () => {
   const [periods, setPeriods] = useState<string>("0");
   const [periodsDisplay, setPeriodsDisplay] = useState<string>("0");
   const [interestRate, setInterestRate] = useState<string>("%");
+  const [interestRateDisplay, setInterestRateDisplay] = useState<string>("");
   const [numericInterest, setNumericInterest] = useState<number>(0);
   const [paymentAmount, setPaymentAmount] = useState<string>("$");
   const [paymentFrequency, setPaymentFrequency] = useState<string>("monthly");
@@ -296,8 +297,11 @@ const Popup = () => {
             inputFieldsFocused.periods ? "border-black" : ""
           }`}
           value={periodsDisplay}
+          onClick={(e) => setPeriodsDisplay("")}
           onSelect={(e) => {
-            setPayPeriodError(false);
+            {
+              setPayPeriodError(false);
+            }
           }}
           onChange={(e) => {
             const inputValue = e.target.value;
@@ -323,10 +327,12 @@ const Popup = () => {
           className={`border rounded  px-3 py-2 w-full ${
             inputFieldsFocused.interestRate ? "border-black" : ""
           }`}
-          value={interestRate}
-          onChange={(e) =>
-            setInterestRate(formatInterestRateInput(e.target.value))
-          }
+          onClick={(e) => setInterestRateDisplay("")}
+          value={interestRateDisplay}
+          onChange={(e) => {
+            setInterestRate(formatInterestRateInput(e.target.value));
+            setInterestRateDisplay(formatInterestRateInput(e.target.value));
+          }}
           onKeyDown={(e) => {
             // Check if the pressed key is the backspace key
             if (e.key === "Backspace") {
