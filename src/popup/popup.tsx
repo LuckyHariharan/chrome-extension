@@ -160,6 +160,7 @@ const Popup = () => {
       periods: false,
       interestRate: false,
       paymentAmount: false,
+      name: false,
     });
   };
   // Function to format the interest rate input
@@ -201,15 +202,15 @@ const Popup = () => {
     periods: false,
     interestRate: false,
     paymentAmount: false,
+    name: false,
   });
-
-  const handleInputBlur = () => {
-    // If the user didn't change the value and clicked away, reset to the previous value
-    if (age === previousAge) {
-      setAge(previousAge);
-      setAgeDisplay(age);
-    }
+  const handleInputBlur = (fieldName) => {
+    setInputFieldsFocused((prevInputFieldsFocused) => ({
+      ...prevInputFieldsFocused,
+      [fieldName]: true,
+    }));
   };
+
   const stage1 = (
     <div className="">
       <div className="mb-4 ">
@@ -381,30 +382,35 @@ const Popup = () => {
   return (
     <div className="w-full p-4 bg-slate-200">
       <h1
-        className={`text-2xl mb-8 ${
+        className={`text-2xl mb-4 ${
           stage === Stages.Input
             ? "text-black font-bold"
             : "text-black font-bold"
         } flex justify-center`}
       >
         {isActuarialMode && stage === Stages.Input
-          ? "Actuarial Present Value"
+          ? "Actuarial CSV Illustrator"
           : "Result"}
       </h1>
       <div>
         {stage === Stages.Input ? (
           <>
-            <div className="flex flex-col mb-4">
-              <div className="flex justify-between items-center">
-                <div className="flex flex-col">
-                  <p>Lakshman Hariharan</p>
-                  <p>V1.01</p>
-                  <input
-                    className="border w-32 text-gray-500 p-2"
-                    placeholder="Enter Profile Name"
-                  />
+            <div>
+              <div className="flex justify-start  mb-8">
+                <div className="flex flex-col w-full">
+                  <p>V1.01 </p>
+                  <p>Lakshman Hariharan </p>
                 </div>
-                <div className="bg-white rounded border-2 border-black p-4 w-full ml-4">
+                <input
+                  className={`border rounded  px-3 py-2 w-full ${
+                    inputFieldsFocused.name ? "border-black" : ""
+                  }`}
+                  placeholder="Enter Profile Name"
+                />
+              </div>
+              <div>
+                Illustration Details
+                <div className="flex bg-white rounded border-2 border-black p-4 w-full mb-2">
                   <p>
                     {age}
                     {gender}
