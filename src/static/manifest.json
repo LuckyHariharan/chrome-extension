@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Actuarial Present Value",
   "description": "Actuarial Present Value Calculator",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "action": {
     "default_popup": "popup.html",
     "default_title": "Actuarial Present Value"
